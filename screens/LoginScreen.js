@@ -8,7 +8,10 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -24,24 +27,25 @@ const LoginScreen = ({ navigation }) => {
       .catch((error) => alert(error.message));
   };
 
-  const handleLogin = ()=>{
+  const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      console.log('Logged in as', user.email);
-    })
-    .catch((error) => alert(error.message));
-  }
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log("Logged in as", user.email);
+      })
+      .catch((error) => alert(error.message));
+  };
 
   // firebase listener for login
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      navigation.replace('Home')
-    })
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Home");
+      }
+    });
 
-    return unsubscribe
-  }, [])
-
+    return unsubscribe;
+  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
