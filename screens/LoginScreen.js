@@ -6,11 +6,43 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginScreen = ({navigation}) => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // handle user signUp
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.email);
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  const handleLogin = ()=>{
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredentials) => {
+      const user = userCredentials.user;
+      console.log('Logged in as', user.email);
+    })
+    .catch((error) => alert(error.message));
+  }
+
+  // firebase listener for login
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      navigation.replace('Home')
+    })
+
+    return unsubscribe
+  }, [])
+
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
@@ -30,11 +62,11 @@ const LoginScreen = ({navigation}) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => {navigation.replace("Home")}}
+          onPress={handleSignUp}
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>Register</Text>
@@ -53,42 +85,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputContainer: {
-    width: '80%'
+    width: "80%",
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5
+    marginTop: 5,
   },
   buttonContainer: {
-    width: '60%',
+    width: "60%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40
+    marginTop: 40,
   },
   button: {
     backgroundColor: "#0782f9",
-     width: '100%',
-     padding: 15,
-     borderRadius: 10,
-     alignItems: "center"
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
   },
   buttonOutline: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     marginTop: 5,
     borderColor: "#0782f9",
-    borderWidth: 2
+    borderWidth: 2,
   },
   buttonOutlineText: {
     color: "#0782f9",
     fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
