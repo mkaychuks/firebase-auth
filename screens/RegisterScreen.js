@@ -7,12 +7,16 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+
+// local imports
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(true);
 
   // handle the users signUp
   const handleSignUp = () => {
@@ -21,8 +25,13 @@ const RegisterScreen = ({ navigation }) => {
         const user = userCredentials.user;
         console.log(user.email);
       })
-      .then(() => navigation.replace("Login"))
+      .then(() => navigation.replace("Home"))
       .catch((err) => alert(err.message));
+  };
+
+  // change the icon
+  const changeIcon = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -34,13 +43,23 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
+        <View style={styles.passwordInput}>
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={[styles.input, { width: "100%" }]}
+            secureTextEntry={showPassword}
+          />
+          <TouchableOpacity onPress={changeIcon}>
+            <Ionicons
+              name={showPassword ? "eye" : "eye-off"}
+              size={24}
+              color="gray"
+              style={{ marginEnd: 15 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -101,5 +120,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  passwordInput: {
+    backgroundColor: "white",
+    paddingleft: 15,
+    borderRadius: 10,
+    marginTop: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
