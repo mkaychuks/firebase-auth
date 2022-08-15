@@ -31,8 +31,10 @@ const HomeScreen = ({ navigation }) => {
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (error) {
-      console.error("Error adding document: ", e);
+      console.error("Error adding document: ", error);
     }
+    setAddress("");
+    setSurname("");
   };
 
   return (
@@ -59,11 +61,7 @@ const HomeScreen = ({ navigation }) => {
           value={address}
           onChangeText={(text) => setAddress(text)}
         />
-        <Button
-          onPress={addToDB}
-          mode="outlined"
-          style={{ marginTop: 15 }}
-        >
+        <Button onPress={addToDB} mode="outlined" style={{ marginTop: 15 }}>
           Submit
         </Button>
       </View>
