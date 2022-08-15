@@ -2,13 +2,13 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Ionicons } from "@expo/vector-icons";
+// import { Ionicons } from "@expo/vector-icons";
+import { TextInput } from "react-native-paper";
 
 // local imports
 import { auth } from "../firebase";
@@ -54,26 +54,23 @@ const LoginScreen = ({ navigation }) => {
         <TextInput
           placeholder="Email"
           value={email}
+          mode={"outlined"}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
+          activeOutlineColor={"white"}
+          outlineColor={"white"}
         />
-        <View style={styles.passwordInput}>
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            style={[styles.input, { width: "100%" }]}
-            secureTextEntry={showPassword}
-          />
-          <TouchableOpacity onPress={changeIcon}>
-            <Ionicons
-              name={showPassword ? "eye" : "eye-off"}
-              size={24}
-              color="gray"
-              style={{ marginEnd: 15 }}
-            />
-          </TouchableOpacity>
-        </View>
+        <TextInput
+          placeholder="Password"
+          value={password}
+          mode={"outlined"}
+          onChangeText={(text) => setPassword(text)}
+          style={styles.input}
+          right={<TextInput.Icon name={showPassword ? "eye" : "eye-off"} onPress={changeIcon}/>}
+          secureTextEntry={showPassword}
+          activeOutlineColor={"white"}
+          outlineColor={"white"}
+        />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -105,7 +102,6 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
-    paddingVertical: 10,
     borderRadius: 10,
     marginTop: 5,
   },
@@ -137,14 +133,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
-  },
-  passwordInput: {
-    backgroundColor: "white",
-    paddingleft: 15,
-    borderRadius: 10,
-    marginTop: 5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
 });
